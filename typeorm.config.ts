@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseContext } from './src/modules/Database/contexts/database.context';
+import { DatabaseContext } from './src/modules/database/contexts/database.context';
 
 config({
   path: `.env.${process.env.NODE_ENV}`,
