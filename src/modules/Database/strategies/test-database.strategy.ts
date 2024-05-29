@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import * as path from 'path';
 import { DataSourceOptions } from 'typeorm';
 import { DatabaseStrategy } from '../interfaces/database-strategy.interface';
+import { BASE_DATABASE_CONFIG } from '../configs/base-database.config';
 
 export class TestDatabaseStrategy implements DatabaseStrategy {
   getDatabaseConfig(
@@ -15,7 +16,7 @@ export class TestDatabaseStrategy implements DatabaseStrategy {
       password: config.get('DATABASE_PASSWORD'),
       database: config.get('DATABASE_NAME'),
       entities: [path.join(process.cwd(), 'dist/../**/*.entity.js')],
-      synchronize: true,
+      ...BASE_DATABASE_CONFIG,
     } as DataSourceOptions;
   }
 }
