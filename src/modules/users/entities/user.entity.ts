@@ -1,22 +1,16 @@
 import { ExtendedBaseEntity } from '@modules/common/entites/extended-base-entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 import { Gender } from '../types/user.type';
+import { UserCredentialsEntity } from './user-credential.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends ExtendedBaseEntity {
   /**
-   * @description Email of the user
-   * @example test@gmail.com
-   */
-  @Column({ nullable: false, unique: true })
-  email: string;
-
-  /**
    * @description Gender of the user
    * @example male
    */
-  @Column({ type: 'enum', enum: Gender, nullable: false })
-  gender: Gender;
+  @Column({ type: 'enum', enum: Gender, nullable: true, default: null })
+  gender: Gender | null;
 
   /**
    * @description Weight of the user in kilograms
@@ -57,4 +51,11 @@ export class UserEntity extends ExtendedBaseEntity {
     default: null,
   })
   waterConsumption: number | null;
+
+  // relations
+
+  @OneToOne(() => UserCredentialsEntity, (credentials) => credentials.user, {
+    cascade: true,
+  })
+  credentials: UserCredentialsEntity;
 }
