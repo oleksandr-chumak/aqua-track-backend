@@ -5,6 +5,7 @@ import { UserModule } from '@modules/users/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { EmailModule } from '@modules/email/email.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     DatabaseModule,
+    EmailModule,
     UserModule,
     AuthModule,
   ],
