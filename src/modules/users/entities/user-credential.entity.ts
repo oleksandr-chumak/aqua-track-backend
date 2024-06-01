@@ -10,6 +10,12 @@ export class UserCredentialsEntity extends ExtendedBaseEntity {
   @Column({ nullable: false })
   password: string;
 
+  @Column({ nullable: true, default: null })
+  emailConfirmationCode: string;
+
+  @Column({ nullable: false, default: false })
+  isEmailConfirmed: boolean;
+
   @OneToOne(() => UserEntity, (user) => user.credentials)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

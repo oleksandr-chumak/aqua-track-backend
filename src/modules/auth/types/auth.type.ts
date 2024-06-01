@@ -8,3 +8,9 @@ export interface RequestWithUser extends Request {
 export interface JwtAuthTokenPayload {
   id: number;
 }
+
+export interface TransformedConfirmEmailBody {
+  code: string;
+  hashedCode: string;
+  user: UserEntity;
+}

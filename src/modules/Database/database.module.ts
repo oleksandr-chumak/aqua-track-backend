@@ -9,7 +9,7 @@ import { DatabaseContext } from './contexts/database.context';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const databaseContext = new DatabaseContext();
-        databaseContext.determineStrategy(config.get('NODE_ENV'));
+        databaseContext.determineStrategy(config.getOrThrow('NODE_ENV'));
         return databaseContext.getDatabaseConfig(config);
       },
     }),

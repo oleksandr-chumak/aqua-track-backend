@@ -36,7 +36,7 @@ export class UserEntity extends ExtendedBaseEntity {
    * @description Time of the user's physical activity in hours
    * @example 2 or null
    */
-  @Column({ nullable: true, default: null })
+  @Column({ type: 'int', nullable: true, default: null })
   physicalActivityTime: number | null;
 
   /**

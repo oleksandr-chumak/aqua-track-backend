@@ -21,7 +21,7 @@ export class LocalAuthGuard implements CanActivate {
     const body = plainToClass(LocalLoginDto, req.body);
     const errors = await validate(body);
     const errorMessages = errors.flatMap(({ constraints }) =>
-      Object.values(constraints),
+      Object.values(constraints || {}),
     );
 
     if (errors.length > 0) {

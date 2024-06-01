@@ -10,7 +10,7 @@ config({
 const configService = new ConfigService({});
 
 const databaseContext = new DatabaseContext();
-databaseContext.determineStrategy(configService.get('NODE_ENV'));
+databaseContext.determineStrategy(configService.getOrThrow('NODE_ENV'));
 const databaseConfig = databaseContext.getDatabaseConfig(configService);
 
 export default new DataSource(databaseConfig);
