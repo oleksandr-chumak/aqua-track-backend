@@ -7,11 +7,18 @@ import { TokenModule } from './_modules/token/token.module';
 import { AuthTokenService } from './_modules/token/services /auth-token.service';
 import { JwtService } from './_modules/token/services /jwt.service';
 import { AuthService } from './services/auth.service';
+import { CodeService } from './services/code.service';
 
 @Module({
   imports: [UserModule, EmailModule, TokenModule],
   controllers: [AuthController],
-  providers: [AuthService, AuthTokenService, JwtService, AuthEmailService],
+  providers: [
+    CodeService,
+    AuthService,
+    AuthTokenService,
+    JwtService,
+    AuthEmailService,
+  ],
   exports: [AuthTokenService],
 })
 export class AuthModule { }

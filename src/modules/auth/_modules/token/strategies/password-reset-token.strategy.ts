@@ -22,7 +22,6 @@ export class PasswordResetTokenStrategy
       z
         .object({
           email: z.string().email(),
-          code: z.string().length(6),
           exp: z.number(),
           iat: z.number(),
         })

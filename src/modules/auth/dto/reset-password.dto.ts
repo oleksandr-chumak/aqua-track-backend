@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class ConfirmEmailDto {
+export class ResetPasswordDto {
   @IsNotEmpty()
   @IsString()
-  email: string;
+  token: string;
 
   @IsNotEmpty()
   @IsString()
-  code: string;
+  newPassword: string;
 }

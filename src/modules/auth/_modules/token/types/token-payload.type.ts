@@ -13,7 +13,6 @@ export interface EmailConfirmationTokenPayload {
 
 export interface PasswordResetTokenPayload {
   email: string;
-  code: string; // hash
 }
 
 export type PayloadWithTimestamp<T> = T & { iat: number; exp: number };

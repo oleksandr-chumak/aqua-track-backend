@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuthTokenService } from '../_modules/token/services /auth-token.service';
 import { AuthEmailService } from './auth-email.service';
 import { UserEntity } from '@modules/users/entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { UserCredentialsService } from '@modules/users/services/user-credentials.service';
+import { CodeService } from './code.service';
 
 @Injectable()
 export class AuthService {
@@ -11,63 +11,44 @@ export class AuthService {
 
   constructor(
     private readonly authEmailService: AuthEmailService,
-    private readonly authTokenService: AuthTokenService,
     private readonly userCredentialsService: UserCredentialsService,
+    private readonly codeService: CodeService,
   ) { }
 
   async sendEmailConfirmationRequest(user: UserEntity) {
-    const code = this.generateCode();
-    const hashedCode = await bcrypt.hash(code, 10);
+    const code = this.codeService.generateCode();
+    const hashedCode = await this.codeService.hashCode(code);
 
-    const [token] = await Promise.all([
-      this.authTokenService.generateEmailConfirmationToken({
-        email: user.credentials.email,
-        code: hashedCode,
-      }),
+    await Promise.all([
       this.authEmailService.sendEmailConfirmation(user.credentials.email, code),
       this.userCredentialsService.setEmailConfirmationCode(
         user.credentials.email,
-        code,
+        hashedCode,
       ),
     ]);
-
-    return { token };
   }
 
-  async confirmEmail(email: string, hashCode: string, code: string) {
-    const isCodeValid = await bcrypt.compare(code, hashCode);
+  async confirmEmail(user: UserEntity, code: string) {
+    const isCodeValid = this.codeService.compareCode(
+      code,
+      user.credentials.emailConfirmationCode || '',
+    );
 
     if (!isCodeValid) {
       return false;
     }
 
-    const result = await this.userCredentialsService.confirmEmail(email);
+    const result = await this.userCredentialsService.confirmEmail(
+      user.credentials.email,
+    );
 
     if (!result) {
-      this.logger.error(`Email confirmation failed for ${email}`);
+      this.logger.error(
+        `Email confirmation failed for ${user.credentials.email}`,
+      );
       return false;
     }
 
     return true;
-  }
-
-  private generateCode(): string {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const digits = '0123456789';
-    const codeLength = 6;
-    let result = '';
-
-    for (let i = 0; i < codeLength; i++) {
-      const isLetter = Math.random() < 0.5;
-      if (isLetter) {
-        const randomIndex = Math.floor(Math.random() * letters.length);
-        result += letters[randomIndex];
-      } else {
-        const randomIndex = Math.floor(Math.random() * digits.length);
-        result += digits[randomIndex];
-      }
-    }
-
-    return result;
   }
 }

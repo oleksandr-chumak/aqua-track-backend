@@ -16,8 +16,8 @@ import { UserEntity } from '@modules/users/entities/user.entity';
 import { NoAuth } from '../decorators/no-auth.decorator';
 import { AuthTokenService } from '../_modules/token/services /auth-token.service';
 import { AuthService } from '../services/auth.service';
-import { TransformedConfirmEmailBody } from '../types/auth.type';
 import { ConfirmEmailValidationPipe } from '../pipes/confirm-email-validation.pipe';
+import { ConfirmEmailBody } from '../types/auth.type';
 
 @Controller('auth')
 @NoAuth()
@@ -45,16 +45,13 @@ export class AuthController {
   @UsePipes(UserNotExistPipe)
   async register(@Body() dto: LocalRegisterDto) {
     const user = await this.userService.createUser(dto);
-    return this.authService.sendEmailConfirmationRequest(user);
+    await this.authService.sendEmailConfirmationRequest(user);
   }
 
   @Post('confirm-email')
-  async confirmEmail(
-    @Body(ConfirmEmailValidationPipe) body: TransformedConfirmEmailBody,
-  ) {
+  async confirmEmail(@Body(ConfirmEmailValidationPipe) body: ConfirmEmailBody) {
     const confirmationResult = await this.authService.confirmEmail(
-      body.user.credentials.email,
-      body.hashedCode,
+      body.user,
       body.code,
     );
 

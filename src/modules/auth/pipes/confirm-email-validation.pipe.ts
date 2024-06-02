@@ -1,53 +1,39 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { AuthTokenService } from '../_modules/token/services /auth-token.service';
 import { ConfirmEmailDto } from '../dto/confirm-email.dto';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
 import { UserService } from '@modules/users/services/user.service';
-import { TransformedConfirmEmailBody } from '../types/auth.type';
+import { validateByClassOrThrow } from '@modules/common/utils/validation.utils';
+import { ConfirmEmailBody } from '../types/auth.type';
 
 @Injectable()
 export class ConfirmEmailValidationPipe implements PipeTransform {
-  constructor(
-    private readonly authTokensService: AuthTokenService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) { }
 
-  async transform(value: unknown): Promise<TransformedConfirmEmailBody> {
-    const body = plainToClass(ConfirmEmailDto, value);
+  async transform(value: unknown): Promise<ConfirmEmailBody> {
+    const body = await validateByClassOrThrow(ConfirmEmailDto, value);
+    const { email } = body;
 
-    const result = await validate(body);
-
-    const errorMessages = result.flatMap(({ constraints }) =>
-      Object.values(constraints || {}),
-    );
-
-    if (result.length > 0) {
-      throw new BadRequestException(errorMessages);
-    }
-
-    const { token } = body;
-    const payload =
-      await this.authTokensService.verifyEmailConfirmationToken(token);
-
-    if (!payload) {
-      throw new BadRequestException('Token is invalid');
-    }
-
-    const user = await this.userService.findUserByEmail(payload.email);
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user) {
-      throw new BadRequestException('Token is invalid');
+      throw new BadRequestException('User with this email does not exist');
     }
 
     if (user.credentials.isEmailConfirmed) {
       throw new BadRequestException('Email is already confirmed');
     }
 
+    if (
+      !user.credentials.resetPasswordCode ||
+      user.credentials.isEmailConfirmationCodeExpired
+    ) {
+      throw new BadRequestException(
+        'Reset password code is invalid or expired',
+      );
+    }
+
     return {
+      user,
       code: body.code,
-      hashedCode: payload.code,
-      user: user,
     };
   }
 }
