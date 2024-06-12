@@ -18,7 +18,7 @@ export class UserEntity extends ExtendedBaseEntity {
    */
   @Column({
     type: 'decimal',
-    precision: 3,
+    precision: 5,
     scale: 2,
     nullable: true,
     default: null,
@@ -45,7 +45,7 @@ export class UserEntity extends ExtendedBaseEntity {
    */
   @Column({
     type: 'decimal',
-    precision: 2,
+    precision: 4,
     scale: 2,
     nullable: true,
     default: null,

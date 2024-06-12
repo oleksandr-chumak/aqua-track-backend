@@ -8,10 +8,11 @@ import { AuthTokenService } from './_modules/token/services /auth-token.service'
 import { JwtService } from './_modules/token/services /jwt.service';
 import { AuthService } from './services/auth.service';
 import { CodeService } from './services/code.service';
+import { AuthRegistrationController } from './controllers/auth-registration.controller';
 
 @Module({
   imports: [UserModule, EmailModule, TokenModule],
-  controllers: [AuthController],
+  controllers: [AuthController, AuthRegistrationController],
   providers: [
     CodeService,
     AuthService,
@@ -21,4 +22,4 @@ import { CodeService } from './services/code.service';
   ],
   exports: [AuthTokenService],
 })
-export class AuthModule { }
+export class AuthModule {}

@@ -6,7 +6,10 @@ export enum Gender {
   FEMALE = 'female',
 }
 
-export type UserEntityRequiredFields = Pick<UserEntity, 'name'>;
+export type UserEntityRequiredFields = Pick<
+  UserEntity,
+  'name' | 'waterConsumption' | 'weight' | 'gender' | 'physicalActivityTime'
+>;
 
 export type UserCredentialsEntityRequiredFields = Pick<
   UserCredentialsEntity,

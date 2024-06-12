@@ -1,12 +1,12 @@
 import { UserService } from '@modules/users/services/user.service';
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { LocalRegisterDto } from '../dto/local-register.dto';
+import { LocalRegistrationDto } from '../dto/registration/local-registration.dto';
 
 @Injectable()
 export class UserNotExistPipe implements PipeTransform {
   constructor(private readonly userService: UserService) { }
 
-  async transform(dto: LocalRegisterDto) {
+  async transform(dto: LocalRegistrationDto) {
     const isUserExists = await this.userService.checkIfUserExists(dto.email);
 
     if (isUserExists) {

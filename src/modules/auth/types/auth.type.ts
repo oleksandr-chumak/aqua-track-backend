@@ -2,6 +2,11 @@ import { UserCredentialsEntity } from '@modules/users/entities/user-credential.e
 import { UserEntity } from '@modules/users/entities/user.entity';
 import { Request } from 'express';
 
+export enum RegistrationStep {
+  EmailConfirmation = 'emailConfirmation',
+  ProfileSetup = 'profileSetup',
+}
+
 export interface RequestWithUser extends Request {
   user: UserEntity;
 }
@@ -15,7 +20,6 @@ export interface ResetPasswordRequestBody {
 }
 
 export interface ConfirmEmailBody {
-  user: UserEntity;
   code: string;
 }
 

@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class LocalRegisterDto {
+export class LocalRegistrationDto {
   @IsNotEmpty()
   @IsString()
   name: string;

@@ -16,6 +16,10 @@ export class UserRepository extends Repository<UserEntity> {
   async createUser(data: CreateUserData): Promise<UserEntity> {
     const user = super.create({
       name: data.name,
+      weight: data.weight,
+      waterConsumption: data.waterConsumption,
+      gender: data.gender,
+      physicalActivityTime: data.physicalActivityTime,
       credentials: {
         email: data.email,
         password: data.password,
